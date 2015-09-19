@@ -120,7 +120,10 @@ missingValues<- sum( is.na(data$steps))
 ```
 
 
-In the dataset were found **2304** values. In order to replace the missing values, it will be used the Mean value for each time interval.
+In the dataset were found **2304** values.  
+
+In order to replace the missing values, it is used the **Mean value for each time interval across the days**. It is expected that the mean is not affected, but some other minors effect could appear. So in order to apply this strategy the following code is implemented:
+
 
 
 ```r
@@ -139,7 +142,7 @@ data2<-transform(data2, steps = as.numeric(steps),date=strptime(date,"%Y-%m-%d")
 in order to verify how the completion of the missing values affects the data behavior, 
 the total steps per day metrics are repeated  
 
-The histogram of the new dataset with NA values replaced against the previous Histogram where the NA were removed:
+The histogram of the new dataset with NA values replaced (**after the strategy was applied**) against the previous Histogram where the NA were removed (**without the strategy**):
 
 
 ```r
@@ -152,13 +155,13 @@ stepsMedian2 <- median(dayStepTotal2)
 
 par(mfrow=c(1,2))
 #Plotting the previous histogram
-hist(dayStepTotal, col="red", xlab="total of steps per day", main="")
+hist(dayStepTotal, col="red", xlab="total of steps per day (Before)", main="")
 title(main = list("Total steps per day histogram (NA Removed)", cex = 0.8))
 abline(v=stepsMean,col="aquamarine",lty=1, lwd=5)
 abline(v=stepsMedian,col="blue",lty=1, lwd=2)
 legend("topright",legend = c(sprintf("Mean: %.04f",stepsMean), sprintf("Median: %.04f",stepsMedian)),col=c("aquamarine","blue"), lty=1, cex=0.5, bty="n")
 #plotting the new Histogram
-hist(dayStepTotal2, col="red", xlab="total of steps per day", main="")
+hist(dayStepTotal2, col="red", xlab="total of steps per day (After)", main="")
 title(main = list("Total steps per day histogram (NA Replaced)", cex = 0.8))
 abline(v=stepsMean2,col="aquamarine",lty=1, lwd=5)
 abline(v=stepsMedian2,col="blue",lty=1, lwd=2)
@@ -174,8 +177,8 @@ Performing a comparison against the previous values obtained:
 
 | Dataset                | Mean             |Median             |
 | -----------------------|----------------- | ----------------- |
-| **NA Removed (Prev)**  | *10766.1887*  | *10765.0000* |
-| **NA Replaced (New)**  | *10766.1887* | *10766.1887*|
+| **NA Removed (Before)**  | *10766.1887*  | *10765.0000* |
+| **NA Replaced (After)**  | *10766.1887* | *10766.1887*|
 
 
 There are no variation regarding the mean value, but the Histogram and the Median were slightly modified.
